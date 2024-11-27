@@ -1,0 +1,81 @@
+:root {
+    --root-bg: #FAFAFA;
+    --text-color: #000;
+    --primary-color: #2684E6;
+    --primary-color__hover: hsl(from var(--primary-color) h s calc(l - 10));
+
+    --header-bg: #2684E6;
+    --header-color: #fff;
+
+    --card-bg: #fff;
+    --card-border-color: #ced4da;
+    --card-text: #000;
+
+    --primary-btn-bg: var(--primary-color);
+    --primary-btn-bg--hover: var(--primary-color__hover);
+    --primary-btn-border: var(--primary-color);
+    --primary-btn-border--hover: var(--primary-color__hover);
+    --primary-btn-color: #fff;
+    --primary-btn-color--hover: #fff;
+
+    --search-bg: var(--primary-color);
+    --search-bg--hover: var(--primary-color__hover);
+    --search-border: var(--primary-color);
+    --search-border--hover: var(--primary-color__hover);
+    --search-color: #fff;
+    --search-color--hover: #fff;
+}
+
+.wrapper {
+    color: var(--text-color);
+    background: var(--root-bg);
+    min-height: 100vh;
+}
+
+.navbar {
+    background-color: var(--header-bg);
+}
+
+.nav-link, .navbar-brand{
+    color: var(--header-color) !important;
+}
+
+.nav-link:hover, .navbar-brand:hover{
+    color: hsl(from var(--header-color) h s calc(l - 10)) !important;
+}
+
+.navbar .title {
+    display: flex !important;
+    align-items: center !important;
+}
+
+.btn.btn-primary {
+    background-color: var(--primary-btn-bg) !important;
+    border-color: var(--primary-btn-border) !important;
+    color: var(--primary-btn-color) !important;
+}
+
+.btn.btn-primary:hover {
+    background-color: var(--primary-btn-bg--hover) !important;
+    border-color: var(--primary-btn-border--hover) !important;
+    color: var(--primary-btn-color--hover) !important;
+}
+
+.delete-draft-applicant-btn {
+    width: 150px;
+}
+
+.search-btn.btn.btn-primary {
+    background-color: var(--search-bg) !important;
+    border-color: var(--search-border) !important;
+    color: var(--search-color) !important;
+}
+
+.search-btn.btn.btn-primary:hover {
+    background-color: var(--search-bg--hover) !important;
+    border-color: var(--search-border--hover) !important;
+    color: var(--search-color--hover) !important;
+}
+.btn:focus {
+    box-shadow: none !important;
+}
