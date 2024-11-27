@@ -1,0 +1,7 @@
+Django==4.2.7
+psycopg2
+psycopg
+djangorestframework==3.14.0
+Pillow
+minio
+django-minio-backend
