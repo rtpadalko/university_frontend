@@ -1,0 +1,10 @@
+Django==4.2.7
+psycopg2
+psycopg
+Pillow
+minio
+django-minio-backend
+djangorestframework==3.14.0
+drf-yasg==1.21.7
+django-redis==5.4.0
+setuptools

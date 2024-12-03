@@ -1,0 +1,113 @@
+version: '3.7'
+
+services:
+  django:
+    build: .
+    container_name: django
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - "8000:8000"
+    environment:
+      PYTHONUNBUFFERED: 1
+    depends_on:
+      - pgdb
+      - migration
+      - minio
+      - redis
+
+  migration:
+    build: .
+    container_name: migration
+    command: bash -c "python manage.py makemigrations && python manage.py migrate --noinput && python manage.py flush --no-input && python manage.py fill_db"
+    volumes:
+      - ./:/usr/src/app
+    depends_on:
+      - pgdb
+
+  pgdb:
+    image: postgres:16.0-alpine
+    container_name: pgdb
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - type: volume
+        source: pgdbdata
+        target: /var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin@pgadmin.com
+      PGADMIN_DEFAULT_PASSWORD: pgadmin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+    volumes:
+       - pgadmin:/var/www/nest_test/docker-volumes/pgadmin
+       - ./servers.json:/pgadmin4/servers.json
+       - ./pgpass:/pgpass
+    ports:
+      - 127.0.0.1:5050:80
+    restart: unless-stopped
+
+  minio:
+    hostname: minio/minio:latest
+    image: quay.io/minio/minio:RELEASE.2022-10-15T19-57-03Z
+    container_name: minio
+    command: server --console-address ":9001" /data/
+    environment:
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: minio123
+    expose:
+      - "9000"
+      - "9001"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    volumes:
+      - minio-data:/data
+
+  createbucket:
+    image: minio/mc:latest
+    container_name: createbucket
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc config host add --api s3v4 s3 http://minio:9000 minio minio123;
+      /usr/bin/mc mb s3/images;
+      /usr/bin/mc anonymous set public s3/images;
+      "
+
+  nginx:
+    image: nginx:1.19.2-alpine
+    container_name: nginx
+    hostname: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    depends_on:
+      - minio
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    volumes:
+      - ./:/usr/src/app/dаta:/root/redis
+      - ./:/usr/src/app/redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      - REDIS_PORT=6379
+
+volumes:
+  pgdbdata: null
+  pgadmin:
+  minio-data:
