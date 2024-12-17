@@ -2,7 +2,7 @@
 
 Предметная область: "Приемная комиссия МГТУ"
 
-**Ссылки на репозиторий:**
+**Ссылки на репозитории:**
 1. university_backend (1-4 лабы) - https://github.com/rtpadalko/university_backend
 2. university_frontend (5-8 лабы) - https://github.com/rtpadalko/university_frontend
 3. pages - https://github.com/rtpadalko/university_frontend/tree/pages
